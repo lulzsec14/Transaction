@@ -17,36 +17,18 @@ const register = async (req, res, next) => {
       }
     );
 
-    // const requestCreated = await Request.create({
-    //   clubName: data.clubName,
-    //   studentName: data.name,
-    // });
-
     const requestId = requestCreated[0]._id;
 
     const findRequest = Request.findOne({ clubName: 'CSI' }).session(session);
-    // const findRequest = Request.findOne({ clubName: 'CSI' });
     if (findRequest) {
       console.log('Request Created');
     }
-    // console.log(findRequest);
 
     const clubAdded = await Club.findOneAndUpdate(
       { clubName: data.clubName },
       { $addToSet: { requestArray: requestId } },
       { new: true }
     ).session(session);
-
-    // const clubAdded = await Club.findOneAndUpdate(
-    //   { clubName: data.clubName },
-    //   { $addToSet: { requestArray: requestId } },
-    //   { new: true }
-    // );
-
-    console.log(clubAdded);
-
-    console.log(requestCreated[0]._id);
-    // console.log(clubAdded);
 
     // to commit the transaction
     // await session.commitTransaction();
