@@ -1,0 +1,81 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const { Club, Request } = require('./model');
+const router = express.Router();
+
+const register = async (req, res, next) => {
+  const data = req.body;
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const requestCreated = await Request.create(
+      [{ clubName: data.clubName, studentName: 'Sourav' }],
+      {
+        session: session,
+      }
+    );
+
+    // const requestCreated = await Request.create({
+    //   clubName: data.clubName,
+    //   studentName: data.name,
+    // });
+
+    const requestId = requestCreated[0]._id;
+
+    const findRequest = Request.findOne({ clubName: 'CSI' }).session(session);
+    // const findRequest = Request.findOne({ clubName: 'CSI' });
+    if (findRequest) {
+      console.log('Request Created');
+    }
+    // console.log(findRequest);
+
+    const clubAdded = await Club.findOneAndUpdate(
+      { clubName: data.clubName },
+      { $addToSet: { requestArray: requestId } },
+      { new: true }
+    ).session(session);
+
+    // const clubAdded = await Club.findOneAndUpdate(
+    //   { clubName: data.clubName },
+    //   { $addToSet: { requestArray: requestId } },
+    //   { new: true }
+    // );
+
+    console.log(clubAdded);
+
+    console.log(requestCreated[0]._id);
+    // console.log(clubAdded);
+
+    // to commit the transaction
+    // await session.commitTransaction();
+
+    // to test the abort transaction
+    await session.abortTransaction();
+    res
+      .status(201)
+      .json({ success: true, message: 'Transaction aborted successfully' });
+  } catch (err) {
+    await session.abortTransaction();
+    console.log(err.message);
+  }
+  session.endSession();
+};
+
+const createClub = async (req, res, next) => {
+  const data = req.body;
+  try {
+    const clubCreated = await Club.create({ clubName: data.clubName });
+    // console.log(clubCreated);
+    res.status(201).json({ success: true, data: clubCreated });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ success: false, error: err });
+  }
+};
+
+router.route('/addTask').post(register);
+router.route('/addClub').post(createClub);
+
+module.exports = router;

@@ -1,0 +1,20 @@
+{
+  "name": "transactions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "currency.js": "^2.0.4",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
