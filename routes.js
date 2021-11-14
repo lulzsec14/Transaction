@@ -31,20 +31,20 @@ const register = async (req, res, next) => {
     ).session(session);
 
     // to commit the transaction
-    // await session.commitTransaction();
+    await session.commitTransaction();
     // res
     //   .status(201)
     //   .json({ success: true, message: 'Transaction committed successfully' });
 
     // to test the abort transaction
-    await session.abortTransaction();
+    // await session.abortTransaction();
     res
       .status(201)
       .json({ success: true, message: 'Transaction aborted successfully' });
   } catch (err) {
     await session.abortTransaction();
     console.log(err.message);
-    res.statu(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
   session.endSession();
 };
