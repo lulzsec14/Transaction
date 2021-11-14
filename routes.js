@@ -11,7 +11,7 @@ const register = async (req, res, next) => {
     session.startTransaction();
 
     const requestCreated = await Request.create(
-      [{ clubName: data.clubName, studentName: 'Sourav' }],
+      [{ clubName: data.clubName, studentName: data.name }],
       {
         session: session,
       }
@@ -50,6 +50,9 @@ const register = async (req, res, next) => {
 
     // to commit the transaction
     // await session.commitTransaction();
+    // res
+    //   .status(201)
+    //   .json({ success: true, message: 'Transaction committed successfully' });
 
     // to test the abort transaction
     await session.abortTransaction();
@@ -59,6 +62,7 @@ const register = async (req, res, next) => {
   } catch (err) {
     await session.abortTransaction();
     console.log(err.message);
+    res.statu(500).json({ success: false, error: err.message });
   }
   session.endSession();
 };

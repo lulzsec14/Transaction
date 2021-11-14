@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const { requestSchema, clubsSchema } = require('./model');
 
-const MONGO_URI =
-  'MONGO_URI=mongodb+srv://clubmgmt:HannahBakerLostHerShoes%402468@cluster1.b63ss.mongodb.net/TransactionsExample?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI;
 
 // async function init() {}
 
